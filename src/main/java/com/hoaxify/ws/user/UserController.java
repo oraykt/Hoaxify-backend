@@ -33,8 +33,13 @@ public class UserController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> createUser(@Valid @RequestBody User user){
 		logger.info("/api/1.0/users");
-		userService.createUser(user);
-		return ResponseEntity.ok(new GenericResponse("User created!"));
+		try{
+			userService.createUser(user);
+			return ResponseEntity.ok(new GenericResponse("User created!"));
+		}catch(Exception exception){
+			exception.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
