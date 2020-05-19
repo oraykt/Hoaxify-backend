@@ -25,18 +25,9 @@ public class UserService {
 		this.passwordEncoder = new BCryptPasswordEncoder();
 	}
 
-	public GenericResponse createUser(User user){
-		GenericResponse response = new GenericResponse();
-		try{
-			user.setPassword(this.passwordEncoder.encode(user.getPassword()));
-			userRepository.save(user);
-			logger.info("New User Created!");
-			response.setMessage("User Created!");
-			return response;
-		}catch(Exception exception){
-			logger.error("Unexpected exception in UserService.createUser");
-			response.setMessage("Service Error");
-			return response;
-		}
+	public void createUser(User user){
+		user.setPassword(this.passwordEncoder.encode(user.getPassword()));
+		userRepository.save(user);
+		logger.info("New User Created!");
 	}
 }
