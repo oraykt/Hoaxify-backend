@@ -32,7 +32,7 @@ public class User {
 	private String displayName;
 
 	@NotNull
-	@Size(min=8, max=255)
-	@Pattern(regexp="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$")
+	@Size(min=4, max=255)
+	@Pattern(regexp="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$", message = "{hoaxify.constrain.password.Pattern.message}")
 	private String password;
 }
