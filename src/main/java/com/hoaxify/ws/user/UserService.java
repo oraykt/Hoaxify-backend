@@ -17,12 +17,12 @@ public class UserService {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
+	UserRepository userRepository;
 	PasswordEncoder passwordEncoder;
 
-	UserRepository userRepository;
-	public UserService(UserRepository userRepository){
+	public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder){
 		this.userRepository = userRepository;
-		this.passwordEncoder = new BCryptPasswordEncoder();
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	public void createUser(User user){
