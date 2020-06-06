@@ -12,7 +12,6 @@ import com.hoaxify.ws.user.User;
 import com.hoaxify.ws.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,7 +22,7 @@ public class AuthController {
 	UserRepository userRepository;
 
 
-	@PostMapping("/api/1.0/auth")
+	@PostMapping("/api/v1/auth")
 	@JsonView(Views.Base.class)
 	private ResponseEntity<?> handleAuthentication(@CurrentUser User user){
 
