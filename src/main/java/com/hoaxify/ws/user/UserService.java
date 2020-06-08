@@ -31,7 +31,10 @@ public class UserService {
 		logger.info("New User Created!");
 	}
 
-	public Page<User> getUsers(Pageable page) {
+	public Page<User> getUsers(User user, Pageable page) {
+		if(user != null){
+			return userRepository.findByUsernameNot(user.getUsername(), page);
+		}
 		return userRepository.findAll(page);
 	}
 }

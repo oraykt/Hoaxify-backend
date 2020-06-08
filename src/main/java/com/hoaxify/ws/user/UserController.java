@@ -5,6 +5,7 @@ package com.hoaxify.ws.user;
  * Time: 10:52 PM
  */
 
+import com.hoaxify.ws.shared.CurrentUser;
 import com.hoaxify.ws.shared.GenericResponse;
 import com.hoaxify.ws.user.vm.UserVM;
 import org.slf4j.Logger;
@@ -44,8 +45,8 @@ public class UserController {
 	}
 
 	@GetMapping(value= "/api/v1/users")
-	public Page<UserVM> getUsers(Pageable page){
-		return userService.getUsers(page).map((UserVM::new));
+	public Page<UserVM> getUsers(@CurrentUser User user, Pageable page){
+		return userService.getUsers(user, page).map((UserVM::new));
 	}
 
 }
