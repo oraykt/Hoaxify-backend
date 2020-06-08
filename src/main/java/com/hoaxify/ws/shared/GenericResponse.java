@@ -5,8 +5,6 @@ package com.hoaxify.ws.shared;
  * Time: 1:28 AM
  */
 
-import org.springframework.http.HttpStatus;
-
 public class GenericResponse {
 	private String message;
 

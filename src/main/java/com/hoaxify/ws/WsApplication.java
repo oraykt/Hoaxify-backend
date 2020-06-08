@@ -17,7 +17,7 @@ public class WsApplication {
 	@Bean
 	CommandLineRunner createInitialUsers (UserService userService){
 		return (args)-> {
-			for(int i =1; i<10; i++){
+			for(int i =1; i<30; i++){
 				User user = new User();
 				user.setUsername("user" + i);
 				user.setDisplayName("display" + i);
