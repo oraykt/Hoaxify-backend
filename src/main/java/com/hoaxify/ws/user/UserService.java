@@ -5,6 +5,8 @@ package com.hoaxify.ws.user;
  * Time: 12:04 AM
  */
 
+import com.hoaxify.ws.error.NotFoundException;
+import com.hoaxify.ws.user.vm.UserVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -36,5 +38,13 @@ public class UserService {
 			return userRepository.findByUsernameNot(user.getUsername(), page);
 		}
 		return userRepository.findAll(page);
+	}
+
+	public User getUser(String username) {
+		User inDB= userRepository.findByUsername(username);
+		if(inDB == null){
+			throw new NotFoundException();
+		}
+		return inDB;
 	}
 }

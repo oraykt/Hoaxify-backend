@@ -15,16 +15,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 
 
 @RestController
+@RequestMapping("/api/v1")
 public class UserController {
 
 	@Autowired
@@ -32,7 +30,7 @@ public class UserController {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-	@PostMapping(value = "/api/v1/users")
+	@PostMapping(value = "/users")
 	public ResponseEntity<?> createUser(@Valid @RequestBody User user){
 		logger.info("/api/v1/users");
 		try{
@@ -44,9 +42,15 @@ public class UserController {
 		}
 	}
 
-	@GetMapping(value= "/api/v1/users")
+	@GetMapping(value= "/users")
 	public Page<UserVM> getUsers(@CurrentUser User user, Pageable page){
 		return userService.getUsers(user, page).map((UserVM::new));
+	}
+
+	@GetMapping(value="/users/{username}")
+	public UserVM getUser(@PathVariable String username){
+		User user = userService.getUser(username);
+		return new UserVM(user);
 	}
 
 }
