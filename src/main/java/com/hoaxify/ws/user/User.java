@@ -5,9 +5,6 @@ package com.hoaxify.ws.user;
  * Time: 10:52 PM
  */
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.hoaxify.ws.shared.Views;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -32,21 +29,17 @@ public class User implements UserDetails {
 	@NotNull
 	@Size(min = 4, max = 32)
 	@UniqueUsername
-	@JsonView(Views.Base.class)
 	private String username;
 
 	@NotNull
 	@Size(min=4,max=255)
-	@JsonView(Views.Base.class)
 	private String displayName;
 
 	@NotNull
 	@Size(min=4, max=255)
 	@Pattern(regexp="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$", message = "{hoaxify.constrain.password.Pattern.message}")
-	@JsonView(Views.Sensitive.class)
 	private String password;
 
-	@JsonView(Views.Base.class)
 	private String image;
 
 	@Override
