@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Autowired
@@ -28,8 +30,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 		http.httpBasic().authenticationEntryPoint(new AuthEntryPoint());
 
-		http
-				.authorizeRequests().antMatchers(HttpMethod.POST, "/api/1.0/auth").authenticated()
+		http.authorizeRequests()
+				.antMatchers(HttpMethod.POST, "/api/v1/auth").authenticated()
+				.antMatchers(HttpMethod.PUT, "/api/v1/users/{username}").authenticated()
 				.and()
 				.authorizeRequests().anyRequest().permitAll();
 

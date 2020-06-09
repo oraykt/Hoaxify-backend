@@ -6,6 +6,7 @@ package com.hoaxify.ws.user;
  */
 
 import com.hoaxify.ws.error.NotFoundException;
+import com.hoaxify.ws.user.vm.UserUpdateVM;
 import com.hoaxify.ws.user.vm.UserVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,5 +47,15 @@ public class UserService {
 			throw new NotFoundException();
 		}
 		return inDB;
+	}
+
+	public User updateUser(String username, UserUpdateVM updatedUser) {
+		User inDB= userRepository.findByUsername(username);
+		if(inDB == null){
+			throw new NotFoundException();
+		}
+
+		inDB.setDisplayName(updatedUser.getDisplayName());
+		return userRepository.save(inDB);
 	}
 }
