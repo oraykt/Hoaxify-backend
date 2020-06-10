@@ -5,7 +5,6 @@ package com.hoaxify.ws.user;
  * Time: 10:52 PM
  */
 
-import com.hoaxify.ws.error.ApiError;
 import com.hoaxify.ws.shared.CurrentUser;
 import com.hoaxify.ws.shared.GenericResponse;
 import com.hoaxify.ws.user.vm.UserUpdateVM;

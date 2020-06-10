@@ -8,7 +8,6 @@ package com.hoaxify.ws.user;
 import com.hoaxify.ws.error.NotFoundException;
 import com.hoaxify.ws.file.FileService;
 import com.hoaxify.ws.user.vm.UserUpdateVM;
-import com.hoaxify.ws.user.vm.UserVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -16,8 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
-import java.util.Base64;
+import java.io.IOException;
 
 @Service
 public class UserService {
