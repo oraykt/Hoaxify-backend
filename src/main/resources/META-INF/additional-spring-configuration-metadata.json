@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "hoaxify.upload-path",
+      "type": "java.lang.String",
+      "description": "The path is for uploaded profile pictures"
+  }
+] }
