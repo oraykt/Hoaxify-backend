@@ -17,4 +17,6 @@ public class UserUpdateVM {
 	@Size(min=4,max=255)
 	private String displayName;
 
+	private String image;
+
 }

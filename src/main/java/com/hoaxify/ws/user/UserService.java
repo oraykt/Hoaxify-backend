@@ -54,7 +54,9 @@ public class UserService {
 		if(inDB == null){
 			throw new NotFoundException();
 		}
-
+		if(updatedUser.getImage() != null){
+			inDB.setImage(updatedUser.getImage());
+		}
 		inDB.setDisplayName(updatedUser.getDisplayName());
 		return userRepository.save(inDB);
 	}
