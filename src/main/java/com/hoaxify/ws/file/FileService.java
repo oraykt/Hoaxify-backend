@@ -6,10 +6,7 @@ package com.hoaxify.ws.file;
  */
 
 import com.hoaxify.ws.configuration.AppConfiguration;
-import com.hoaxify.ws.user.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.tika.Tika;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -24,17 +21,22 @@ import java.util.UUID;
 @Service
 public class FileService {
 
-	@Autowired
 	AppConfiguration appConfiguration;
 
-	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+	Tika tika;
+
+	public FileService(AppConfiguration appConfiguration) {
+		this.appConfiguration = appConfiguration;
+		this.tika = new Tika();
+	}
 
 	public String writeBase64EncodedStringToFile(String image) throws IOException {
+
 		String fileName = generateRandomName();
 		File file = new File(appConfiguration.getUploadPath() + "/" + fileName);
 		OutputStream outputStream = new FileOutputStream(file);
-
 		byte[] base64encoded = Base64.getDecoder().decode(image);
+
 		outputStream.write(base64encoded);
 		outputStream.close();
 		return fileName;
@@ -52,5 +54,10 @@ public class FileService {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public String detectType(String image) {
+		byte[] base64encoded = Base64.getDecoder().decode(image);
+		return tika.detect(base64encoded);
 	}
 }

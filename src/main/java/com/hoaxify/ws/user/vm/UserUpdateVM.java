@@ -5,6 +5,7 @@ package com.hoaxify.ws.user.vm;
  * Time: 11:08 AM
  */
 
+import com.hoaxify.ws.shared.FileType;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -17,6 +18,7 @@ public class UserUpdateVM {
 	@Size(min=4,max=255)
 	private String displayName;
 
+	@FileType(types={"jpeg", "jpg", "png"})
 	private String image;
 
 }
