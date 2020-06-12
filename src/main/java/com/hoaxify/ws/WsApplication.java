@@ -23,15 +23,18 @@ public class WsApplication {
 	@Profile(value = "dev")
 	CommandLineRunner createInitialData (UserService userService, HoaxService hoaxService){
 		return (args)-> {
-			for(int i =1; i<30; i++){
+			for(int i =1; i<10; i++){
 				User user = new User();
 				user.setUsername("user" + i);
 				user.setDisplayName("display" + i);
 				user.setPassword("P4ssword");
 				userService.createUser(user);
+
+			}
+
+			for(int i =1; i<50; i++){
 				Hoax hoax = new Hoax();
 				hoax.setContent("Test Content no." + i);
-				hoax.setTimestamp(new Date());
 				hoaxService.save(hoax);
 			}
 		};
