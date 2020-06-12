@@ -5,6 +5,7 @@ package com.hoaxify.ws.hoax;
  * Time: 2:42 PM
  */
 
+import com.hoaxify.ws.user.User;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -28,4 +29,6 @@ public class Hoax {
 
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date timestamp;
+
+	private User user;
 }

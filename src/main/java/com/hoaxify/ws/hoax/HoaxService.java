@@ -5,13 +5,11 @@ package com.hoaxify.ws.hoax;
  * Time: 2:44 PM
  */
 
-import com.hoaxify.ws.user.UserService;
+import com.hoaxify.ws.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -27,8 +25,9 @@ public class HoaxService {
 		this.hoaxRepository = hoaxRepository;
 	}
 
-	public void save(Hoax hoax) {
+	public void save(Hoax hoax, User user) {
 		hoax.setTimestamp(new Date());
+		hoax.setUser(user);
 		hoaxRepository.save(hoax);
 		logger.info("New Hoax Created!");
 	}
