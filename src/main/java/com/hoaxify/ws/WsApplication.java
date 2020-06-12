@@ -1,5 +1,7 @@
 package com.hoaxify.ws;
 
+import com.hoaxify.ws.hoax.Hoax;
+import com.hoaxify.ws.hoax.HoaxService;
 import com.hoaxify.ws.user.User;
 import com.hoaxify.ws.user.UserService;
 import org.springframework.boot.CommandLineRunner;
@@ -7,6 +9,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
+
+import java.util.Date;
 
 @SpringBootApplication
 public class WsApplication {
@@ -17,7 +21,7 @@ public class WsApplication {
 
 	@Bean
 	@Profile(value = "dev")
-	CommandLineRunner createInitialUsers (UserService userService){
+	CommandLineRunner createInitialData (UserService userService, HoaxService hoaxService){
 		return (args)-> {
 			for(int i =1; i<30; i++){
 				User user = new User();
@@ -25,6 +29,10 @@ public class WsApplication {
 				user.setDisplayName("display" + i);
 				user.setPassword("P4ssword");
 				userService.createUser(user);
+				Hoax hoax = new Hoax();
+				hoax.setContent("Test Content no." + i);
+				hoax.setTimestamp(new Date());
+				hoaxService.save(hoax);
 			}
 		};
 	}
