@@ -27,7 +27,7 @@ public class WsApplication {
 				user.setDisplayName("display" + i);
 				user.setPassword("P4ssword");
 				userService.createUser(user);
-				for(int j =1; j<3; j++){
+				for(int j =1; j<20; j++){
 					Hoax hoax = new Hoax();
 					hoax.setContent("Hoax no.(" + j + ") from user (" + i + ")");
 					hoaxService.save(hoax, user);
