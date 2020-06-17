@@ -20,10 +20,14 @@ public class HoaxVM {
 
 	private UserVM user;
 
+	private FileAttachmentVM fileAttachment;
+
 	public HoaxVM(Hoax hoax){
 		this.setId(hoax.getId());
 		this.setContent(hoax.getContent());
 		this.setTimestamp(hoax.getTimestamp().getTime());
 		this.setUser(new UserVM(hoax.getUser()));
+		if(hoax.getFileAttachment() != null)
+			this.fileAttachment = new FileAttachmentVM(hoax.getFileAttachment());
 	}
 }

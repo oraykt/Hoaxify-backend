@@ -34,6 +34,6 @@ public class Hoax {
 	@ManyToOne
 	private User user;
 
-	@OneToOne
+	@OneToOne(mappedBy = "hoax")
 	private FileAttachment fileAttachment;
 }
