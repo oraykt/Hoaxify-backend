@@ -5,6 +5,7 @@ package com.hoaxify.ws.hoax;
  * Time: 2:42 PM
  */
 
+import com.hoaxify.ws.file.FileAttachment;
 import com.hoaxify.ws.user.User;
 import lombok.Data;
 
@@ -23,7 +24,7 @@ public class Hoax {
 
 	@NotNull
 	@Size(min=1, max=500)
-	@Lob
+	@Column(length = 500)
 	private String content;
 
 
@@ -32,4 +33,7 @@ public class Hoax {
 
 	@ManyToOne
 	private User user;
+
+	@OneToOne
+	private FileAttachment fileAttachment;
 }

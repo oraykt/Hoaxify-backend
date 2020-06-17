@@ -19,8 +19,8 @@ import java.io.IOException;
 
 @Service
 public class UserService {
-
-	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+//	TODO Logger
+//	private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
 	UserRepository userRepository;
 	PasswordEncoder passwordEncoder;
@@ -35,7 +35,6 @@ public class UserService {
 	public void createUser(User user){
 		user.setPassword(this.passwordEncoder.encode(user.getPassword()));
 		userRepository.save(user);
-		logger.info("New User Created!");
 	}
 
 	public Page<User> getUsers(User user, Pageable page) {

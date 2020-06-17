@@ -5,6 +5,7 @@ package com.hoaxify.ws.hoax;
  * Time: 2:40 PM
  */
 
+import com.hoaxify.ws.hoax.vm.HoaxSubmitVM;
 import com.hoaxify.ws.hoax.vm.HoaxVM;
 import com.hoaxify.ws.shared.CurrentUser;
 import com.hoaxify.ws.shared.GenericResponse;
@@ -31,7 +32,7 @@ public class HoaxController {
 	HoaxService hoaxService;
 
 	@PostMapping("/hoaxes")
-	public GenericResponse saveHoax(@Valid @RequestBody Hoax hoax,
+	public GenericResponse saveHoax(@Valid @RequestBody HoaxSubmitVM hoax,
 									@CurrentUser User user) {
 		hoaxService.save(hoax, user);
 		return new GenericResponse("Hoax is saved");

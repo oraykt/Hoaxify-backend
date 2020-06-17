@@ -5,6 +5,9 @@ package com.hoaxify.ws.hoax;
  * Time: 2:44 PM
  */
 
+import com.hoaxify.ws.file.FileAttachment;
+import com.hoaxify.ws.file.FileAttachmentRepository;
+import com.hoaxify.ws.hoax.vm.HoaxSubmitVM;
 import com.hoaxify.ws.user.User;
 import com.hoaxify.ws.user.UserService;
 import org.slf4j.Logger;
@@ -17,25 +20,35 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class HoaxService {
-
-	private static final Logger logger = LoggerFactory.getLogger(HoaxService.class);
+//	@TODO Logger
+//	private static final Logger logger = LoggerFactory.getLogger(HoaxService.class);
 
 	HoaxRepository hoaxRepository;
+	FileAttachmentRepository fileAttachmentRepository;
 	UserService userService;
 
-	public HoaxService(HoaxRepository hoaxRepository, UserService userService) {
+	public HoaxService(HoaxRepository hoaxRepository, UserService userService, FileAttachmentRepository fileAttachmentRepository) {
 		this.hoaxRepository = hoaxRepository;
 		this.userService = userService;
+		this.fileAttachmentRepository = fileAttachmentRepository;
 	}
 
-	public void save(Hoax hoax, User user) {
+	public void save(HoaxSubmitVM hoaxSubmitVM, User user) {
+		Hoax hoax = new Hoax();
+		hoax.setContent(hoaxSubmitVM.getContent());
 		hoax.setTimestamp(new Date());
 		hoax.setUser(user);
 		hoaxRepository.save(hoax);
-		logger.info("New Hoax Created!");
+		Optional<FileAttachment> optionalFileAttachment = fileAttachmentRepository.findById(hoaxSubmitVM.getAttachmentId());
+		if(optionalFileAttachment.isPresent()){
+			FileAttachment fileAttachment = optionalFileAttachment.get();
+			fileAttachment.setHoax(hoax);
+			fileAttachmentRepository.save(fileAttachment);
+		}
 	}
 
 	public Page<Hoax> getHoaxes(Pageable page) {
