@@ -14,9 +14,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -26,7 +31,8 @@ public class HoaxController {
 	HoaxService hoaxService;
 
 	@PostMapping("/hoaxes")
-	public GenericResponse saveHoax(@Valid @RequestBody Hoax hoax, @CurrentUser User user) {
+	public GenericResponse saveHoax(@Valid @RequestBody Hoax hoax,
+									@CurrentUser User user) {
 		hoaxService.save(hoax, user);
 		return new GenericResponse("Hoax is saved");
 	}
@@ -37,17 +43,50 @@ public class HoaxController {
 	}
 
 	@GetMapping("/hoaxes/{hoaxId:[0-9]+}")
-	public Page<HoaxVM> getHoaxesRelative(@PathVariable long hoaxId, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable page){
-		return hoaxService.getOldHoaxes(hoaxId,page).map(HoaxVM::new);
+	public ResponseEntity<?> getHoaxesRelative(@PathVariable long hoaxId,
+											   @RequestParam(name="count", required = false, defaultValue = "false") boolean count,
+											   @RequestParam(name="direction", required = false, defaultValue = "before") String direction,
+											   @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable page){
+		if(count){
+			long newHoaxCount = hoaxService.getNewHoaxesCount(hoaxId);
+			Map<String, Long> response = new HashMap<>();
+			response.put("count", newHoaxCount);
+			return ResponseEntity.ok(response);
+		}
+		if(direction.equals("after")){
+			List<HoaxVM> newHoaxes = hoaxService.getNewHoaxes(hoaxId, page.getSort())
+					.stream().map(HoaxVM::new)
+					.collect(Collectors.toList());
+			return ResponseEntity.ok(newHoaxes);
+		}
+		return ResponseEntity.ok(hoaxService.getOldHoaxes(hoaxId,page).map(HoaxVM::new));
 	}
 
+
 	@GetMapping("/users/{username}/hoaxes")
-	public Page<HoaxVM> getUserHoaxes(@PathVariable String username, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable page){
+	public Page<HoaxVM> getUserHoaxes(@PathVariable String username,
+									  @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable page){
 		return hoaxService.getHoaxesOfUser(username, page).map(HoaxVM::new);
 	}
 
 	@GetMapping("/users/{username}/hoaxes/{hoaxId:[0-9]+}")
-	public Page<HoaxVM> getUserHoaxesRelative(@PathVariable String username, @PathVariable long hoaxId, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable page){
-		return hoaxService.getOldHoaxesOfUser(username,hoaxId, page).map(HoaxVM::new);
+	public ResponseEntity<?> getUserHoaxesRelative(@PathVariable String username,
+												   @PathVariable long hoaxId,
+												   @RequestParam(name="count", required = false, defaultValue="false") boolean count,
+												   @RequestParam(name="direction", required = false, defaultValue = "before") String direction,
+												   @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable page){
+		if(count){
+			long newHoaxCount = hoaxService.getNewHoaxesCountOfUser(username, hoaxId);
+			Map<String, Long> response = new HashMap<>();
+			response.put("count", newHoaxCount);
+			return ResponseEntity.ok(response);
+		}
+		if(direction.equals("after")){
+			List<HoaxVM> newHoaxes = hoaxService.getNewHoaxesOfUser(username, hoaxId, page.getSort())
+					.stream().map(HoaxVM::new)
+					.collect(Collectors.toList());
+			return ResponseEntity.ok(newHoaxes);
+		}
+		return ResponseEntity.ok(hoaxService.getOldHoaxesOfUser(username,hoaxId, page).map(HoaxVM::new));
 	}
 }
