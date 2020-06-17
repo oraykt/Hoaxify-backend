@@ -12,9 +12,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -48,28 +48,42 @@ public class HoaxService {
 	}
 
 	public Page<Hoax> getOldHoaxes(long hoaxId, String username, Pageable page) {
+		Specification<Hoax> specification = idLessThan(hoaxId);
 		if(username != null){
 			User inDB = userService.getUser(username);
-			return hoaxRepository.findByIdLessThanAndUser(hoaxId, inDB, page);
+			specification = specification.and(userIs(inDB));
 		}
-		return hoaxRepository.findByIdLessThan(hoaxId, page);
+		return hoaxRepository.findAll(specification, page);
 	}
 
 	public long getNewHoaxesCount(long hoaxId, String username) {
+		Specification<Hoax> specification = idGreaterThan(hoaxId);
 		if(username != null){
 		User inDB = userService.getUser(username);
-		return hoaxRepository.countByIdGreaterThanAndUser(hoaxId, inDB);
+		specification = specification.and(userIs(inDB));
 		}
-		return  hoaxRepository.countByIdGreaterThan(hoaxId);
+		return  hoaxRepository.count(specification);
 	}
 
 	public List<Hoax> getNewHoaxes(long hoaxId, String username, Sort sort) {
+		Specification<Hoax> specification = idGreaterThan(hoaxId);
 		if(username != null){
 			User inDB = userService.getUser(username);
-			return hoaxRepository.findByIdGreaterThanAndUser(hoaxId, inDB);
+			specification = specification.and(userIs(inDB));
 		}
-		return hoaxRepository.findByIdGreaterThan(hoaxId, sort);
+		return hoaxRepository.findAll(specification, sort);
 	}
 
+	Specification<Hoax> idLessThan(long id){
+		return (root,criteriaQuery, criteriaBuilder)-> criteriaBuilder.lessThan(root.get("id"), id);
+	}
+
+	Specification<Hoax> idGreaterThan(long id){
+		return (root,criteriaQuery, criteriaBuilder)-> criteriaBuilder.greaterThan(root.get("id"), id);
+	}
+
+	Specification<Hoax> userIs(User user){
+		return (root,criteriaQuery, criteriaBuilder)-> criteriaBuilder.equal(root.get("user"), user);
+	}
 
 }
