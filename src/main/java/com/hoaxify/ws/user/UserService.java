@@ -8,8 +8,6 @@ package com.hoaxify.ws.user;
 import com.hoaxify.ws.error.NotFoundException;
 import com.hoaxify.ws.file.FileService;
 import com.hoaxify.ws.user.vm.UserUpdateVM;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -67,7 +65,7 @@ public class UserService {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			fileService.deleteFile(oldImageName);
+			fileService.deleteProfileImage(oldImageName);
 		}
 		return userRepository.save(inDB);
 	}

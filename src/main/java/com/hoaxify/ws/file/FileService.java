@@ -17,6 +17,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.Date;
@@ -41,7 +42,7 @@ public class FileService {
 
 	public String writeBase64EncodedStringToFile(String image) throws IOException {
 		String fileName = generateRandomName();
-		File file = new File(appConfiguration.getUploadPath() + "/" + fileName);
+		File file = new File(appConfiguration.getProfileStoragePath() + "/" + fileName);
 		OutputStream outputStream = new FileOutputStream(file);
 		byte[] base64encoded = Base64.getDecoder().decode(image);
 
@@ -54,13 +55,9 @@ public class FileService {
 		return UUID.randomUUID().toString().replaceAll("=","");
 	}
 
-	public void deleteFile(String oldImageName) {
+	public void deleteProfileImage(String oldImageName) {
 		if(oldImageName != null){
-			try {
-				Files.deleteIfExists(Paths.get(appConfiguration.getUploadPath(), oldImageName));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			deleteFile(Paths.get(appConfiguration.getUploadPath(), oldImageName));
 		}
 	}
 
@@ -71,7 +68,7 @@ public class FileService {
 
 	public FileAttachment saveHoaxAttachment(MultipartFile multipartFile) {
 		String fileName = generateRandomName();
-		File file = new File(appConfiguration.getUploadPath() + "/" + fileName);
+		File file = new File(appConfiguration.getAttachmentStoragePath() + "/" + fileName);
 
 		try {
 			OutputStream outputStream = new FileOutputStream(file);
@@ -87,12 +84,27 @@ public class FileService {
 		return fileAttachmentRepository.save(attachment);
 	}
 
+	public void deleteAttachment(String oldImageName) {
+		if(oldImageName != null){
+			deleteFile(Paths.get(appConfiguration.getAttachmentStoragePath(), oldImageName));
+		}
+	}
+
+	private void deleteFile(Path path){
+		try {
+			Files.deleteIfExists(path);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
 	@Scheduled(fixedRate = 24*60*60*1000)
 	public void cleanupStorage(){
 		Date twentyFourHoursAgo = new Date(System.currentTimeMillis() - (24*60*60*1000));
 		List<FileAttachment> filesToBeDeleted = fileAttachmentRepository.findByDateBeforeAndHoaxIsNull(twentyFourHoursAgo);
 		for(FileAttachment file: filesToBeDeleted){
-			deleteFile(file.getName());
+			deleteAttachment(file.getName());
 			fileAttachmentRepository.deleteById(file.getId());
 		}
 	}
