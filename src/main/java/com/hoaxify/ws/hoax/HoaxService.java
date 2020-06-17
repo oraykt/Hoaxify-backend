@@ -47,35 +47,29 @@ public class HoaxService {
 		return hoaxRepository.findByUser(inDB, page);
 	}
 
-	public Page<Hoax> getOldHoaxes(long hoaxId, Pageable page) {
-
+	public Page<Hoax> getOldHoaxes(long hoaxId, String username, Pageable page) {
+		if(username != null){
+			User inDB = userService.getUser(username);
+			return hoaxRepository.findByIdLessThanAndUser(hoaxId, inDB, page);
+		}
 		return hoaxRepository.findByIdLessThan(hoaxId, page);
 	}
 
-	public Page<Hoax> getOldHoaxesOfUser(String username, long hoaxId, Pageable page) {
+	public long getNewHoaxesCount(long hoaxId, String username) {
+		if(username != null){
 		User inDB = userService.getUser(username);
-
-		return hoaxRepository.findByIdLessThanAndUser(hoaxId, inDB, page);
-	}
-
-	public long getNewHoaxesCount(long hoaxId) {
+		return hoaxRepository.countByIdGreaterThanAndUser(hoaxId, inDB);
+		}
 		return  hoaxRepository.countByIdGreaterThan(hoaxId);
 	}
 
-	public long getNewHoaxesCountOfUser(String username, long hoaxId) {
-		User inDB = userService.getUser(username);
-
-		return hoaxRepository.countByIdGreaterThanAndUser(hoaxId, inDB);
-	}
-
-	public List<Hoax> getNewHoaxes(long hoaxId, Sort sort) {
-
+	public List<Hoax> getNewHoaxes(long hoaxId, String username, Sort sort) {
+		if(username != null){
+			User inDB = userService.getUser(username);
+			return hoaxRepository.findByIdGreaterThanAndUser(hoaxId, inDB);
+		}
 		return hoaxRepository.findByIdGreaterThan(hoaxId, sort);
 	}
 
-	public List<Hoax> getNewHoaxesOfUser(String username, long hoaxId, Sort sort) {
-		User inDB = userService.getUser(username);
 
-		return hoaxRepository.findByIdGreaterThanAndUser(hoaxId, inDB);
-	}
 }
