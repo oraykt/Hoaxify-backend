@@ -55,25 +55,32 @@ public class FileService {
 		return UUID.randomUUID().toString().replaceAll("=","");
 	}
 
-	public void deleteProfileImage(String oldImageName) {
+	public void deleteOldProfile(String oldImageName) {
 		if(oldImageName != null){
-			deleteFile(Paths.get(appConfiguration.getUploadPath(), oldImageName));
+			deleteFile(Paths.get(appConfiguration.getProfileStoragePath(), oldImageName));
 		}
 	}
 
-	public String detectType(String image) {
-		byte[] base64encoded = Base64.getDecoder().decode(image);
-		return tika.detect(base64encoded);
+	public String detectType(String base64){
+		byte[] base64encoded = Base64.getDecoder().decode(base64);
+		return detectType(base64encoded);
+	}
+
+	public String detectType(byte[] arr) {
+		return tika.detect(arr);
 	}
 
 	public FileAttachment saveHoaxAttachment(MultipartFile multipartFile) {
 		String fileName = generateRandomName();
 		File file = new File(appConfiguration.getAttachmentStoragePath() + "/" + fileName);
-
+		String fileType = null;
 		try {
+
+			byte[] fileBytes = multipartFile.getBytes();
 			OutputStream outputStream = new FileOutputStream(file);
-			outputStream.write(multipartFile.getBytes());
+			outputStream.write(fileBytes);
 			outputStream.close();
+			fileType = detectType(fileBytes);
 
 		} catch (IOException e) {
 			e.printStackTrace();
