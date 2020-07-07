@@ -10,8 +10,6 @@ import com.hoaxify.ws.file.FileAttachmentRepository;
 import com.hoaxify.ws.hoax.vm.HoaxSubmitVM;
 import com.hoaxify.ws.user.User;
 import com.hoaxify.ws.user.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -99,4 +97,7 @@ public class HoaxService {
 		return (root,criteriaQuery, criteriaBuilder)-> criteriaBuilder.equal(root.get("user"), user);
 	}
 
+	public void deleteHoax(long hoaxId) {
+		hoaxRepository.deleteById(hoaxId);
+	}
 }
