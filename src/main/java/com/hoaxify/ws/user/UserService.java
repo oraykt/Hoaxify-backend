@@ -25,17 +25,11 @@ public class UserService {
 	UserRepository userRepository;
 	PasswordEncoder passwordEncoder;
 	FileService fileService;
-	HoaxService hoaxService;
 
 	public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, FileService fileService) {
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.fileService = fileService;
-	}
-
-	@Autowired
-	public void setHoaxService(HoaxService hoaxService) {
-		this.hoaxService = hoaxService;
 	}
 
 	public void createUser(User user){
@@ -81,8 +75,7 @@ public class UserService {
 
 	public void deleteUser(String username) {
 		User inDB = userRepository.findByUsername(username);
-		hoaxService.deleteHoaxesOfUser(inDB);
-		// userRepository.delete(inDB);
-		userRepository.deleteByUsername(username);
+		fileService.deleteAllStoredFilesForUser(inDB);
+		userRepository.delete(inDB);
 	}
 }

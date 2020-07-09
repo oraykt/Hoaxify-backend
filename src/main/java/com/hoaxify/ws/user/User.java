@@ -5,6 +5,7 @@ package com.hoaxify.ws.user;
  * Time: 10:52 PM
  */
 
+import com.hoaxify.ws.hoax.Hoax;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -15,6 +16,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Collection;
+import java.util.List;
 
 
 @Data
@@ -40,6 +42,9 @@ public class User implements UserDetails {
 
 	@Lob
 	private String image;
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+	private List<Hoax> hoaxes;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

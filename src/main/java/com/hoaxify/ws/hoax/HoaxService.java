@@ -31,14 +31,10 @@ public class HoaxService {
 	FileAttachmentRepository fileAttachmentRepository;
 	UserService userService;
 	FileService fileService;
-	public HoaxService(HoaxRepository hoaxRepository, FileAttachmentRepository fileAttachmentRepository, FileService fileService) {
+	public HoaxService(HoaxRepository hoaxRepository, FileAttachmentRepository fileAttachmentRepository, FileService fileService, UserService userService) {
 		this.hoaxRepository = hoaxRepository;
 		this.fileAttachmentRepository = fileAttachmentRepository;
 		this.fileService = fileService;
-	}
-
-	@Autowired
-	public void setUserService(UserService userService) {
 		this.userService = userService;
 	}
 
@@ -116,9 +112,4 @@ public class HoaxService {
 		hoaxRepository.deleteById(hoaxId);
 	}
 
-	public void deleteHoaxesOfUser(User user){
-		Specification<Hoax> userOwned = userIs(user);
-		List<Hoax> hoaxesToBeRemoved = hoaxRepository.findAll(userOwned);
-		hoaxRepository.deleteAll(hoaxesToBeRemoved);
-	}
 }
