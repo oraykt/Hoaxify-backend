@@ -11,6 +11,7 @@ import com.hoaxify.ws.file.FileService;
 import com.hoaxify.ws.hoax.vm.HoaxSubmitVM;
 import com.hoaxify.ws.user.User;
 import com.hoaxify.ws.user.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -30,11 +31,15 @@ public class HoaxService {
 	FileAttachmentRepository fileAttachmentRepository;
 	UserService userService;
 	FileService fileService;
-	public HoaxService(HoaxRepository hoaxRepository, UserService userService, FileAttachmentRepository fileAttachmentRepository, FileService fileService) {
+	public HoaxService(HoaxRepository hoaxRepository, FileAttachmentRepository fileAttachmentRepository, FileService fileService) {
 		this.hoaxRepository = hoaxRepository;
-		this.userService = userService;
 		this.fileAttachmentRepository = fileAttachmentRepository;
 		this.fileService = fileService;
+	}
+
+	@Autowired
+	public void setUserService(UserService userService) {
+		this.userService = userService;
 	}
 
 	public void save(HoaxSubmitVM hoaxSubmitVM, User user) {
@@ -109,5 +114,11 @@ public class HoaxService {
 		}
 
 		hoaxRepository.deleteById(hoaxId);
+	}
+
+	public void deleteHoaxesOfUser(User user){
+		Specification<Hoax> userOwned = userIs(user);
+		List<Hoax> hoaxesToBeRemoved = hoaxRepository.findAll(userOwned);
+		hoaxRepository.deleteAll(hoaxesToBeRemoved);
 	}
 }

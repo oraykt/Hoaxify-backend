@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.metadata.GenericCallMetaDataProvider;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,6 +61,15 @@ public class UserController {
 	public ResponseEntity<?> updateUser(@Valid @RequestBody UserUpdateVM updatedUser, @PathVariable String username, @CurrentUser User loggedInUser){
 		User user = userService.updateUser(username, updatedUser);
 		return ResponseEntity.ok(new UserVM(user));
+	}
+
+	@DeleteMapping(value ="/users/{username}")
+	@PreAuthorize("#username == principal.username")
+	public GenericResponse deleteUser(@PathVariable String username){
+
+		userService.deleteUser(username);
+
+		return new GenericResponse("User is removed");
 	}
 
 }
